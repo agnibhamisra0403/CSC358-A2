@@ -1,0 +1,2 @@
+/usr/bin/ar qc libcomp_net_testing_debug.a CMakeFiles/comp_net_testing_debug.dir/common.cc.o
+/usr/bin/ranlib libcomp_net_testing_debug.a

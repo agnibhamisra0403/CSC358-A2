@@ -1,0 +1,2 @@
+/usr/bin/ar qc libcomp_net_debug.a CMakeFiles/comp_net_debug.dir/router.cc.o CMakeFiles/comp_net_debug.dir/webget.cc.o "/mnt/c/Users/misra/CSC358-A2/pa_networking_stack/pa_networking_stack/src/network_interface.cc.o"
+/usr/bin/ranlib libcomp_net_debug.a
