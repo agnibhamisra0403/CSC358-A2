@@ -5,6 +5,19 @@
 #include <optional>
 #include <queue>
 
+struct RouteStruct {
+    uint32_t route_prefix; // Used to get target destination IP address
+    uint8_t prefix_length; // Helps in defining the target destination IP address
+    std::optional<Address> next_hop; // the next hop address to send the datagram to in the case it's not directly connected.
+    size_t interface_number; // which interface to send the datagram on
+
+    // Constructor for RouteStruct
+    RouteStruct(const uint32_t prefix, const uint8_t len, const std::optional<Address> hop, const size_t interface)
+        : prefix(prefix), prefix_length(len), next_hop(hop), interface_number(interface) {}
+};
+
+
+
 // A wrapper for NetworkInterface that makes the host-side
 // interface asynchronous: instead of returning received datagrams
 // immediately (from the `recv_frame` method), it stores them for
@@ -54,6 +67,10 @@ class Router
 {
   // The router's collection of network interfaces
   std::vector<AsyncNetworkInterface> interfaces_ {};
+
+private:
+  // The routing table for this router instance. 
+  std::vector<RouteStruct> routing_table {};
 
 public:
   // Add an interface to the router
