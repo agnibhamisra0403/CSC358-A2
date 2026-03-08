@@ -23,4 +23,58 @@ void Router::add_route( const uint32_t route_prefix,
   routing_table.push_back(RouteStruct{route_prefix, prefix_length, next_hop, interface_num });
 }
 
-void Router::route() {}
+// read the destination address on every incoming packet and scan the rulebook to find most specific instruction for where to send it next.
+void Router::route() {
+  // loop through all the interfaces
+  for (size_t i = 0; i < interfaces_.size(); i++) {
+    auto datagram = interfaces_[i].maybe_receive();
+    
+    while (datagram.has_value()) {
+      // get the destination IP
+      InternetDatagram dg = datagram.value();
+      uint32_t dst = dg.header().dst;
+
+      int longest_prefix = -1;
+      int best_match_index = -1;
+
+      // loop through the routing table
+      for (size_t j = 0; j < routing_table.size(); j++) {
+        const RouteStruct& route = routing_table[j];
+        
+        // if prefix len is 0, then we cannot use shifting by 32 - avoided through the continue
+        if (route.prefix_length == 0){
+          if (route.prefix_length > longest_prefix) {
+            longest_prefix = route.prefix_length;
+            best_match_index = j;
+          }
+          continue;
+        }
+
+        uint32_t shifted_dst = dst >> (32 - route.prefix_length);
+        uint32_t shifted_prefix = route.route_prefix >> (32 - route.prefix_length);
+        
+        // in the case that the top bits match check if this is a better match than the current match
+        if (shifted_dst == shifted_route) {
+          if (current.prefix_length > longest_prefix) {
+            longest_prefix = current.prefix_length;
+            best_match_index = j;
+          }
+        }
+      }
+
+      // check if we got a match
+      if (best_match_index != -1) {
+        // assign the best route to this match
+        RouteStruct best_route = routing_table[best_match_index];
+
+        // do phase 3 and 4 stuff here
+      }
+
+      else {
+        // no match was found from the router table
+      }
+
+      datagram = interfaces_[i].maybe_receive();
+    }
+  }
+}

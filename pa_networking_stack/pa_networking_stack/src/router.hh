@@ -13,7 +13,7 @@ struct RouteStruct {
 
     // Constructor for RouteStruct
     RouteStruct(const uint32_t prefix, const uint8_t len, const std::optional<Address> hop, const size_t interface)
-        : prefix(prefix), prefix_length(len), next_hop(hop), interface_number(interface) {}
+        : route_prefix(prefix), prefix_length(len), next_hop(hop), interface_number(interface) {}
 };
 
 
