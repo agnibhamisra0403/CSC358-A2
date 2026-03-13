@@ -54,8 +54,8 @@ void Router::route() {
         uint32_t shifted_prefix = route.route_prefix >> (32 - route.prefix_length);
         
         // in the case that the top bits match check if this is a better match than the current match
-        if (shifted_dst == shifted_route) {
-          if (current.prefix_length > longest_prefix) {
+        if (shifted_dst == shifted_prefix) {
+          if (route.prefix_length > longest_prefix) {
             longest_prefix = current.prefix_length;
             best_match_index = j;
           }
@@ -67,7 +67,19 @@ void Router::route() {
         // assign the best route to this match
         RouteStruct best_route = routing_table[best_match_index];
 
-        // do phase 3 and 4 stuff here
+        if (dg.header().ttl > 1) {
+          // the packet is not dropped as it time to live
+          dg.header().ttl--;
+
+          // add phase 4 stuff here
+
+                // get the next hop address and send the packet on the correct interface
+        }
+
+        else {
+          // the packet is dropped as it time to live - might need to do nothing
+        }
+
       }
 
       else {
