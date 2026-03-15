@@ -32,7 +32,7 @@ void Router::route() {
     while (datagram.has_value()) {
       // get the destination IP
       InternetDatagram dg = datagram.value();
-      uint32_t dst = dg.header().dst;
+      uint32_t dst = dg.header.dst;
 
       int longest_prefix = -1;
       int best_match_index = -1;
@@ -56,7 +56,7 @@ void Router::route() {
         // in the case that the top bits match check if this is a better match than the current match
         if (shifted_dst == shifted_prefix) {
           if (route.prefix_length > longest_prefix) {
-            longest_prefix = current.prefix_length;
+            longest_prefix = route.prefix_length;
             best_match_index = j;
           }
         }
@@ -67,9 +67,9 @@ void Router::route() {
         // assign the best route to this match
         RouteStruct best_route = routing_table[best_match_index];
 
-        if (dg.header().ttl > 1) {
+        if (dg.header.ttl > 1) {
           // the packet is not dropped as it time to live
-          dg.header().ttl--;
+          dg.header.ttl--;
 
           // add phase 4 stuff here
 
